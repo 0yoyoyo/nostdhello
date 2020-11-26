@@ -10,6 +10,15 @@ fn __libc_csu_init() {}
 #[no_mangle]
 fn __libc_start_main(f: fn() -> isize) {
     f();
+    unsafe {
+        asm!(
+            "syscall",
+            in("rax") 60,
+            in("rdi") 0,
+            out("rcx") _,
+            out("r11") _,
+        );
+    }
 }
 
 #[panic_handler]
