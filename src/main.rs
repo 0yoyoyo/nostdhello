@@ -9,12 +9,12 @@ fn __libc_csu_init() {}
 
 #[no_mangle]
 fn __libc_start_main(main: fn() -> isize) {
-    main();
+    let ret = main();
     unsafe {
         asm!(
             "syscall",
             in("rax") 60,
-            in("rdi") 0,
+            in("rdi") ret,
             out("rcx") _,
             out("r11") _,
         );
