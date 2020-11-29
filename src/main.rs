@@ -8,8 +8,8 @@ fn __libc_csu_fini() {}
 fn __libc_csu_init() {}
 
 #[no_mangle]
-fn __libc_start_main(f: fn() -> isize) {
-    f();
+fn __libc_start_main(main: fn() -> isize) {
+    main();
     unsafe {
         asm!(
             "syscall",
@@ -27,7 +27,7 @@ fn panic(_panic: &core::panic::PanicInfo<'_>) -> ! {
 }
 
 #[start]
-fn main(_argc: isize, _argv: *const *const u8) -> isize {
+fn rust_main(_argc: isize, _argv: *const *const u8) -> isize {
     let buf = "Hello, world!\n";
     let ret: isize;
     unsafe {
