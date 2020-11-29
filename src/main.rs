@@ -13,10 +13,10 @@ fn __libc_start_main(main: fn() -> isize) {
     unsafe {
         asm!(
             "syscall",
-            in("rax") 60,
+            in("rax") 60, // _exit
             in("rdi") ret,
-            out("rcx") _,
-            out("r11") _,
+            out("rcx") _, // destroyed in kernel
+            out("r11") _, // destroyed in kernel
         );
     }
 }
@@ -33,12 +33,12 @@ fn rust_main(_argc: isize, _argv: *const *const u8) -> isize {
     unsafe {
         asm!(
             "syscall",
-            in("rax") 1,
-            in("rdi") 1,
+            in("rax") 1, // write
+            in("rdi") 1, // stdout
             in("rsi") buf.as_ptr(),
             in("rdx") buf.len(),
-            out("rcx") _,
-            out("r11") _,
+            out("rcx") _, // destroyed in kernel
+            out("r11") _, // destroyed in kernel
             lateout("rax") ret,
         );
     }
