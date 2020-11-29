@@ -8,8 +8,12 @@ fn __libc_csu_fini() {}
 fn __libc_csu_init() {}
 
 #[no_mangle]
-fn __libc_start_main(main: fn() -> isize) {
-    let ret = main();
+extern "C" fn __libc_start_main(
+    main: extern "C" fn(isize, *const *const u8) -> isize,
+    argc: isize,
+    argv: *const *const u8
+) {
+    let ret = main(argc, argv);
     unsafe {
         asm!(
             "syscall",
